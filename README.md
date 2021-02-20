@@ -54,7 +54,23 @@ The driver can return the x,y position in raw 0-65,534 u16 counts or in mult-tie
 ### Raw u16 Output
 If using internal driver polling with application callback, set the callback_ret_raw parameter to True to receive 'raw' values.  The callback parameter will be a list containing two values. If using the manual polling mode, call GetRawCount() to return a list containing two values.  The first item in the list will be the raw x value (0-65,534) and the second item in the list will be the raw y value (0-65,534).  
 
-With the joystick in resting centered position, the raw x,y values should each be approximately 1/2 the maximum count (i.e. [32,767, 32,767]).  Moving the joystick to the left or right should increase or decrease the x count depending on how your potentiometers are wired.  The same is true of the y count when moving the joystick up and down.  The exact count values of center, fully up/down, fully left/right will vary depending on several factors including the resolution of your system's A/D, A/D reference voltage range and quality of the potentiometers and joystick construction.  
+With the joystick in resting centered position, the raw x,y values should each be approximately 1/2 the maximum count (i.e. [32,766, 32,766]).  Moving the joystick to the left or right should increase or decrease the x count depending on how your potentiometers are wired.  The same is true of the y count when moving the joystick up and down.  The exact count values of center, fully up/down, fully left/right will vary depending on several factors including the resolution of your system's A/D, A/D reference voltage range and quality of the potentiometers and joystick construction.  
 
 ### Mult-tiered up/down/left/right States
-An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In this mode each cardinal direction (up/down/left/right) is split into three equally* sized regions.  The innermost region, closest to the center is referred to as "LOW", the middle region is referred to as "MED", and the final region is referred to as "HI".
+An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In this mode each cardinal direction (up/down/left/right) is split into three equally\* sized regions, Zone 1, Zone 2, and Zone 3 (see **Image 1**).  \* The Dead Zone lies at the very center and is subtracted from the total size of Zone 1.  The x and y states are determined independently depending on which zone they lie in when measured.
+
+ ![two_axis_analog_joystick_zones](/images/two_axis_analog_joystick_zones.png) |
+ ----------------------- |
+ **Image 1: Joystick Zones** |
+
+In its default state the driver assigns the following values:
+
+
+
+ * Dead Zone 
+   * If x is between the midpoint value (32,766) and midpoint value plus/minus the dead zone offset (1,280 default) then the constant ```SS_CENTERED``` stick state is returned
+   * If y is between the midpoint value (32,766) and midpoint value plus/minus the dead zone offset (1,280 default) then the constant ```SS_CENTERED``` stick state is returned
+   ```python
+   if ((32766 - 1280) <= x and x < (1280 + 32766)):
+       x_state = SS_CENTERED
+   ```
