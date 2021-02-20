@@ -57,4 +57,4 @@ If using internal driver polling with application callback, set the callback_ret
 With the joystick in resting centered position, the raw x,y values should each be approximately 1/2 the maximum count (i.e. [32,767, 32,767]).  Moving the joystick to the left or right should increase or decrease the x count depending on how your potentiometers are wired.  The same is true of the y count when moving the joystick up and down.  The exact count values of center, fully up/down, fully left/right will vary depending on several factors including the resolution of your system's A/D, A/D reference voltage range and quality of the potentiometers and joystick construction.  
 
 ### Mult-tiered up/down/left/right States
-An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In this 
+An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In this mode each cardinal direction (up/down/left/right) is split into three equally* sized regions.  The innermost region, closest to the center is referred to as "LOW", the middle region is referred to as "MED", and the final region is referred to as "HI".
