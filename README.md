@@ -122,3 +122,6 @@ The x,y states returned by ```GetCurrentState()``` or by specifying ```callback_
 
 ## Dead Zone Adjustment
 The dead zone is determined by taking the midpoint count 0x7FFE (32,766d) and adding/subtracting the driver default or user supplied dead zone value (see **Table 1** x4/x5 and y4/y5 values).  The driver default dead zone value is 0x0500 (1,280d).  This value may be changed by supplying ```deadzone=new_value``` at initialization; the ```deadzone``` value must be selected such that the midpoint count 0x7FFE (32,766d) +/- the ```deadzone``` value does not exceed the values of x3/x6 and y3/y6.
+
+## Examples
+TBD
