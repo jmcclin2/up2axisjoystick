@@ -48,7 +48,7 @@ while True:
     time.sleep(1)
 ```
 
-## x,y Position Types
+## x,y Position Reporting Types
 The driver can return the x,y position in raw 0-65,534 u16 counts or in mult-tiered up/down/left/right states.
 
 ### Raw u16 Output
@@ -57,15 +57,34 @@ If using internal driver polling with application callback, set the callback_ret
 With the joystick in resting centered position, the raw x,y values should each be approximately 1/2 the maximum count (i.e. [32,766, 32,766]).  Moving the joystick to the left or right should increase or decrease the x count depending on how your potentiometers are wired.  The same is true of the y count when moving the joystick up and down.  The exact count values of center, fully up/down, fully left/right will vary depending on several factors including the resolution of your system's A/D, A/D reference voltage range and quality of the potentiometers and joystick construction.  
 
 ### Mult-tiered up/down/left/right States
-An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In this mode each cardinal direction (up/down/left/right) is split into three equally\* sized regions, Zone 1, Zone 2, and Zone 3 (see **Image 1**).  \* The Dead Zone lies at the very center and is subtracted from the total size of Zone 1.  The x and y states are determined independently depending on which zone they lie in when measured.
+An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In this mode each cardinal direction (up/down/left/right) is split into three equally\* sized regions, Zone 1, Zone 2, and Zone 3 (see **Image 1**).  
 
- ![two_axis_analog_joystick_zones](/images/two_axis_analog_joystick_zones.png) |
- ----------------------- |
- **Image 1: Joystick Zones** |
+\*The Dead Zone lies at the very center and is subtracted from the total size of Zone 1.
 
-In its default state the driver assigns the following values:
+![two_axis_analog_joystick_zones](/images/two_axis_analog_joystick_zones.png) |
+----------------------- |
+**Image 1: Joystick Zones** |
 
+The divisions between the zones are determined by the values of x1-x8 and y1-y8 (see **Image 2**).
 
+![two_axis_analog_joystick_values](/images/two_axis_analog_joystick_values.png) |
+----------------------- |
+**Image 2: Zone Values** |
+ 
+In its default state, the driver assigns the following values to x1-x8 and y1-y8:
+Marker        | Raw Count Value       |
+------------- | --------------------- |
+  x1, y1      |   0x0000 (0d)         |
+  x2, y2      |   0x2AAA (10,922d)    |
+  x3, y3      |   0x5554 (21,844d)    |
+  x4, y4      |   0x7AFE (31,486d)    |
+  center      |   0x7FFE (32,766d)    |
+  x5, y5      |   0x84FE (34,046d)    |
+  x6, y6      |   0xAAAA (43,690d)    |
+  x7, y7      |   0xD554 (54,612d)    |
+  x8, y8      |   0xFFFE (65,534d)    |
+
+The x and y states are determined independently depending on which zone the coordinates lie between when measured.
 
  * Dead Zone 
    * If x is between the midpoint value (32,766) and midpoint value plus/minus the dead zone offset (1,280 default) then the constant ```SS_CENTERED``` stick state is returned
