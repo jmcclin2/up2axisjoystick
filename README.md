@@ -71,24 +71,25 @@ An alternative to raw x,y counts are multi-tiered up/down/left/right states.  In
 ----------------------- |
 **Image 2: Joystick Regions On the Y-Axis** |
 
-The divisions between the zones are determined by the values of x1-x8 and y1-y8 (see **Image 3**).
+The divisions between the regions are determined by the values of x1-x8 and y1-y8 (see **Image 3**).
 
 ![two_axis_analog_joystick_values](/images/two_axis_analog_joystick_values.png) |
 ----------------------- |
 **Image 3: Zone Values** |
  
 In its default state, the driver assigns the following values to x1-x8 and y1-y8:
-Marker        | Raw Count Value       |
-------------- | --------------------- |
-  x1, y1      |   0x0000 (0d)         |
-  x2, y2      |   0x2AAA (10,922d)    |
-  x3, y3      |   0x5554 (21,844d)    |
-  x4, y4      |   0x7AFE (31,486d)    |
-  center      |   0x7FFE (32,766d)    |
-  x5, y5      |   0x84FE (34,046d)    |
-  x6, y6      |   0xAAAA (43,690d)    |
-  x7, y7      |   0xD554 (54,612d)    |
-  x8, y8      |   0xFFFE (65,534d)    |
+| Marker       | Raw Count Value       |
+|------------- | --------------------- |
+|  x1, y1      |   0x0000 (0d)         |
+|  x2, y2      |   0x2AAA (10,922d)    |
+|  x3, y3      |   0x5554 (21,844d)    |
+|  x4, y4      |   0x7AFE (31,486d)    |
+|  center      |   0x7FFE (32,766d)    |
+|  x5, y5      |   0x84FE (34,046d)    |
+|  x6, y6      |   0xAAAA (43,690d)    |
+|  x7, y7      |   0xD554 (54,612d)    |
+|  x8, y8      |   0xFFFE (65,534d)    |
+|**Table 1: Region Boundary Raw Count Mapping**|
 
 The x and y states are determined independently depending on which zone the x,y coordinates lie between when measured.  States corresponding to x will be MIN/MID/MAX variants of LEFT and RIGHT.  States corresponding to y will be MIN/MID/MAX variants of UP and DOWN.  When the x,y coordinates lie in the dead zone the CENTERED state is returned.  The MIN/MID/MAX zones can be thought of as three ranges of joystick deflection.  MIN represents a joystick delfected just beyond the dead zone of center.  MID represents a joystick deflected approximately half way through its available travel.  MAX represents a joystick deflected approximately full travel.  
 
@@ -114,4 +115,7 @@ The x and y states are determined independently depending on which zone the x,y 
   * If x4 <= x_measured < x5 then ```SS_CENTERED``` stick state is returned
   * If y4 <= y_measured < y5 then ```SS_CENTERED``` stick state is returned
 
-State output may be obtained by calling ```GetCurrentState()``` anytime or by specifying ```callback_ret_raw=False``` at initialization when using callbacks; the return value will be a list containing two elements, the const x state followed by the const y state.
+State output may be obtained by calling ```GetCurrentState()``` anytime or by specifying ```callback_ret_raw=False``` at initialization when using callbacks; the return value will be a list containing two elements, the const x state followed by the const y state.  The values listed in **Table 1** presume that the potentiometers of the joystick are wired with a specific polarity.  The x and y axis values can be independently reversed to match other potentiometer wiring polarities as discussed in the next section.
+
+## Potentiometer Polarity Reversal
+
