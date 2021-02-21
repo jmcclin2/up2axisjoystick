@@ -84,12 +84,26 @@ Marker        | Raw Count Value       |
   x7, y7      |   0xD554 (54,612d)    |
   x8, y8      |   0xFFFE (65,534d)    |
 
-The x and y states are determined independently depending on which zone the coordinates lie between when measured.
+The x and y states are determined independently depending on which zone the coordinates lie between when measured.  States corresponding to x will be LOW/MED/HIGH variants of LEFT and RIGHT.  States corresponding to y will be LOW/MED/HIGH variants of UP and DOWN.  When the x,y coordinates lie in the dead zone the CENTERED state is returned. 
 
- * Dead Zone 
-   * If x is between the midpoint value (32,766) and midpoint value plus/minus the dead zone offset (1,280 default) then the constant ```SS_CENTERED``` stick state is returned
-   * If y is between the midpoint value (32,766) and midpoint value plus/minus the dead zone offset (1,280 default) then the constant ```SS_CENTERED``` stick state is returned
-   ```python
-   if ((32766 - 1280) <= x and x < (1280 + 32766)):
-       x_state = SS_CENTERED
-   ```
+* Zone 3 
+  * If x1 <= x_measured < x2 then ```SS_LEFT_HI``` stick state is returned
+  * If y1 <= y_measured < y2 then ```SS_DOWN_HI``` stick state is returned
+  * If x7 <= x_measured <= x8 then ```SS_RIGHT_HI``` stick state is returned
+  * If y7 <= y_measured <= y8 then ```SS_UP_HI``` stick state is returned
+
+* Zone 2 
+  * If x2 <= x_measured < x3 then ```SS_LEFT_MED``` stick state is returned
+  * If y2 <= y_measured < y3 then ```SS_DOWN_MED``` stick state is returned
+  * If x6 <= x_measured < x7 then ```SS_RIGHT_MED``` stick state is returned
+  * If y6 <= y_measured < y7 then ```SS_UP_MED``` stick state is returned
+
+* Zone 1 
+  * If x3 <= x_measured < x4 then ```SS_LEFT_LOW``` stick state is returned
+  * If y3 <= y_measured < y4 then ```SS_DOWN_LOW``` stick state is returned
+  * If x5 <= x_measured < x6 then ```SS_RIGHT_LOW``` stick state is returned
+  * If y5 <= y_measured < y6 then ```SS_UP_LOW``` stick state is returned
+
+* Dead Zone
+  * If x4 <= x_measured < x5 then ```SS_CENTERED``` stick state is returned
+  * If y4 <= y_measured < y5 then ```SS_CENTERED``` stick state is returned
