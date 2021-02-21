@@ -84,7 +84,7 @@ Marker        | Raw Count Value       |
   x7, y7      |   0xD554 (54,612d)    |
   x8, y8      |   0xFFFE (65,534d)    |
 
-The x and y states are determined independently depending on which zone the coordinates lie between when measured.  States corresponding to x will be LOW/MED/HIGH variants of LEFT and RIGHT.  States corresponding to y will be LOW/MED/HIGH variants of UP and DOWN.  When the x,y coordinates lie in the dead zone the CENTERED state is returned. 
+The x and y states are determined independently depending on which zone the coordinates lie between when measured.  States corresponding to x will be LOW/MED/HIGH variants of LEFT and RIGHT.  States corresponding to y will be LOW/MED/HIGH variants of UP and DOWN.  When the x,y coordinates lie in the dead zone the CENTERED state is returned.  The LOW/MED/HIGH zones can be thought of as three ranges of joystick deflection.  LOW represents a joystick delfected just beyond the dead zone of center.  MED represents a joystick deflected approximately half way through its available travel.  HI represents a joystick deflected approximately full travel.  
 
 * Zone 3 
   * If x1 <= x_measured < x2 then ```SS_LEFT_HI``` stick state is returned
