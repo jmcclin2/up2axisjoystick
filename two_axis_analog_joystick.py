@@ -29,7 +29,7 @@ SS_RIGHT_MIN          = const(0x0200)
 SS_RIGHT_MID          = const(0x0400)
 SS_RIGHT_MAX          = const(0x0800)
 
-state_to_string = { SS_CENTERED  :"SS_CENTERED",
+SS_To_String    = { SS_CENTERED  :"SS_CENTERED",
                     SS_UP_MIN    :"SS_UP_MIN",
                     SS_UP_MID    :"SS_UP_MID",
                     SS_UP_MAX    :"SS_UP_MAX",
@@ -140,4 +140,4 @@ class TwoAxisAnalogJoystick:
         self.poll_timer.deinit()
         
     def StateToString(self, state):
-        return state_to_string[state]
+        return SS_To_String[state]
