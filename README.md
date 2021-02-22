@@ -124,7 +124,7 @@ The x,y states returned by ```GetCurrentState()``` or by specifying ```callback_
 The dead zone is determined by taking the midpoint count 0x7FFE (32,766d) and adding/subtracting the driver default or user supplied dead zone value (see **Table 1** x4/x5 and y4/y5 values).  The driver default dead zone value is 0x0500 (1,280d).  This value may be changed by supplying ```deadzone=new_value``` at initialization; the ```deadzone``` value must be selected such that the midpoint count 0x7FFE (32,766d) +/- the ```deadzone``` value does not exceed the values of x3/x6 and y3/y6.
 
 ## Examples
-The following is a simple example of using the internal driver polling (100ms between measurements) with a callback which returns the joystick x,y states.  A persistent pixel is moved around a 128x128 px SD1327 based OLED display.  The rate at which the pixel moves is determined by the x,y state; CENTERED results in no change, MIN deflections of the joystick result in 1 pixel 'jumps', MED deflections 3 pixel 'jumps' and MAX deflections 6 pixel 'jumps' each 100ms.   
+The following is a simple example of using the internal driver polling (100ms between measurements) with a callback which returns the joystick x,y states.  A persistent pixel is moved around a 128x128 px SD1327 based OLED display.  The rate at which the pixel moves is determined by the x,y state; CENTERED results in no change, MIN deflections of the joystick result in 1 pixel 'jumps', MED deflections 3 pixel 'jumps' and MAX deflections 6 pixel 'jumps' each 100ms.  This example was created and tested on a Raspberry PICO.   
 
 ```python
 from machine import Pin
