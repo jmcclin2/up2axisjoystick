@@ -124,4 +124,81 @@ The x,y states returned by ```GetCurrentState()``` or by specifying ```callback_
 The dead zone is determined by taking the midpoint count 0x7FFE (32,766d) and adding/subtracting the driver default or user supplied dead zone value (see **Table 1** x4/x5 and y4/y5 values).  The driver default dead zone value is 0x0500 (1,280d).  This value may be changed by supplying ```deadzone=new_value``` at initialization; the ```deadzone``` value must be selected such that the midpoint count 0x7FFE (32,766d) +/- the ```deadzone``` value does not exceed the values of x3/x6 and y3/y6.
 
 ## Examples
-TBD
+The following is a simple example of using the internal driver polling (100ms between measurements) with a callback which returns the joystick x,y states.  A persistent pixel is moved around a 128x128 px SD1327 based OLED display.  The rate at which the pixel moves is determined by the x,y state; CENTERED results in no change, MIN deflections of the joystick result in 1 pixel 'jumps', MED deflections 3 pixel 'jumps' and MAX deflections 6 pixel 'jumps' each 100ms.   
+
+```python
+from machine import Pin
+from machine import SPI
+from sdd1327 import SSD1327_SPI
+from two_axis_analog_joystick import TwoAxisAnalogJoystick
+import two_axis_analog_joystick as TAAJ
+
+# Setup display on SPI bus
+spi = SPI(0)
+dc = Pin(10)
+res = Pin(11)
+cs = Pin(12)
+ssd1327 = SSD1327_SPI(128, 128, spi, dc, res, cs)
+
+# Start pixel in middle of screen
+screen_x = 64
+screen_y = 64
+ssd1327.pixel(screen_x, screen_y, 15)
+ssd1327.show()
+
+# Callback
+def stick_cb(val):
+    global screen_x, screen_y
+    global ssd1327
+    
+    x = val[TAAJ.X_VALUE_LIST_INDEX]
+    y = val[TAAJ.Y_VALUE_LIST_INDEX]
+    
+    # Adjust pixel x coordinate based on joystick deflection
+    if (x == TAAJ.SS_LEFT_MIN):
+        screen_x -= 1
+    elif (x == TAAJ.SS_LEFT_MID):
+        screen_x -= 3
+    elif (x == TAAJ.SS_LEFT_MAX):
+        screen_x -= 6
+    elif (x == TAAJ.SS_RIGHT_MIN):
+        screen_x += 1
+    elif (x == TAAJ.SS_RIGHT_MID):
+        screen_x += 3
+    elif (x == TAAJ.SS_RIGHT_MAX):
+        screen_x += 6
+    
+    # Bounds check
+    if (screen_x < 0):
+        screen_x = 0
+    elif (screen_x > 127):
+        screen_x = 127
+        
+    # Adjust pixel y coordinate based on joystick deflection
+    # Note: for display, positive change is down, negative is up
+    if (y == TAAJ.SS_DOWN_MIN):
+        screen_y += 1
+    elif (y == TAAJ.SS_DOWN_MID):
+        screen_y += 3
+    elif (y == TAAJ.SS_DOWN_MAX):
+        screen_y += 6
+    elif (y == TAAJ.SS_UP_MIN):
+        screen_y -= 1
+    elif (y == TAAJ.SS_UP_MID):
+        screen_y -= 3
+    elif (y == TAAJ.SS_UP_MAX):
+        screen_y -= 6
+
+    # Bounds check
+    if (screen_y < 0):
+        screen_y = 0
+    elif (screen_y > 127):
+        screen_y = 127
+
+    # Display updated pixel
+    ssd1327.pixel(screen_x, screen_y, 15)
+    ssd1327.show()
+
+stick = TwoAxisAnalogJoystick(26, 27, polling_ms=100, callback=stick_cb)
+stick.StartPolling()
+```
