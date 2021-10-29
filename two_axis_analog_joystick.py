@@ -92,12 +92,12 @@ class TwoAxisAnalogJoystick:
         self.range_lookup[5][1] = SS_DOWN_MID
         self.range_lookup[6][1] = SS_DOWN_MAX
         
-    def UpdateRawCount(self):
+    def __UpdateRawCount(self):
         self.x_adc_count = self.x_adc_pin.read_u16()
         self.y_adc_count = self.y_adc_pin.read_u16()
         
     def GetRawCount(self):
-        self.UpdateRawCount()
+        self.__UpdateRawCount()
         raw = []
         raw.append(self.x_adc_count)
         raw.append(self.y_adc_count)
@@ -125,7 +125,7 @@ class TwoAxisAnalogJoystick:
                     
         return state
         
-    def PollTimerExpired(self, timer):     
+    def __PollTimerExpired(self, timer):     
         if (self.callback_ret_raw):
             raw = self.GetRawCount()
             self.callback(raw)
@@ -134,7 +134,7 @@ class TwoAxisAnalogJoystick:
             self.callback(state)
         
     def StartPolling(self):
-        self.poll_timer.init(mode=Timer.PERIODIC, period=self.polling_ms, callback=self.PollTimerExpired)
+        self.poll_timer.init(mode=Timer.PERIODIC, period=self.polling_ms, callback=self.__PollTimerExpired)
     
     def StopPolling(self):
         self.poll_timer.deinit()
