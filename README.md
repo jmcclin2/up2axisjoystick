@@ -1,4 +1,4 @@
-# micropython_two_axis_analog_joystick
+# up2axisjoystick
 Micropython two axis analog joystick driver.  
 - Automatic x,y position polling with application callback or manual polling modes
 - Reports position in either raw 0-65,534 u16 count or multi-tiered up/down/left/right states
