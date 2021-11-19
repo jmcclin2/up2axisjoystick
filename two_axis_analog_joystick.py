@@ -102,9 +102,8 @@ class TwoAxisAnalogJoystick:
         raw.append(self.x_adc_count)
         raw.append(self.y_adc_count)
         return raw
-        
-    def GetCurrentState(self):         
-        raw = self.GetRawCount()
+    
+    def ConvertRawToState(self, raw):
         state = []
         
         for index in range(2):       
@@ -125,13 +124,16 @@ class TwoAxisAnalogJoystick:
                     
         return state
         
+    def GetCurrentState(self):         
+        return self.ConvertRawToState(self.GetRawCount())
+        
     def __PollTimerExpired(self, timer):     
         if (self.callback_ret_raw):
             raw = self.GetRawCount()
-            self.callback(raw)
+            self.callback(self.callback_ret_raw, raw)
         else:
             state = self.GetCurrentState()
-            self.callback(state)
+            self.callback(self.callback_ret_raw, state)
         
     def StartPolling(self):
         self.poll_timer.init(mode=Timer.PERIODIC, period=self.polling_ms, callback=self.__PollTimerExpired)
